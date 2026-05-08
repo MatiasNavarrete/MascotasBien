@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{userIp}] %-5level %logger{36} - %msg%n"
+
+spring:
+  application:
+    name: propietario
+
+  profiles:
+    active: dev
+
+  session:
+    store-type: jdbc
+
+  #  security:
+  #    jwt:
+  #      rsa-private: ${RSA_PRIVATE:}
+  #      rsa-public: ${RSA_PUBLIC:}
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
