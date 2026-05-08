@@ -1,10 +1,10 @@
 package com.example.propietario.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import com.example.propietario.enums.EstadoBusqueda;
+import com.example.propietario.enums.EstadoCuenta;
+import com.example.propietario.enums.TipoPropietario;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,4 +30,14 @@ public class Propietario extends BaseEntity {
     private String secondaryContactPhone;
 
     private String address;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoPropietario tipoPropietario;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoCuenta estadoCuenta;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoBusqueda estadoBusqueda;
 }
