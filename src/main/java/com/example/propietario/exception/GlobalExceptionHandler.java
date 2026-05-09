@@ -2,6 +2,7 @@ package com.example.propietario.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +33,13 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleReadableExceptions(HttpMessageNotReadableException exception){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Valor de campo invalido o formato de JSON incorrecto");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }
