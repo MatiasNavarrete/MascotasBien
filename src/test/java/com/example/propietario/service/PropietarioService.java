@@ -16,9 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,5 +86,23 @@ class PropietarioServiceTest {
         assertNotNull(resultado);
         assertEquals("Pepe", resultado.name()); // Cambia a .getName() si no es record
         assertEquals(idSimulado, resultado.id());
+    }
+    @Test
+    void cuandoGuardarPropietarioConEmailExistente_entoncesLanzaExcepcion() {
+        // 1. Arrange
+        String emailRepetido = "fade@u.cl";
+
+        // Usamos LENIENT para que Mockito no se queje de los otros mocks que no usamos aquí
+        lenient().when(propietarioRepository.existsByEmail(emailRepetido)).thenReturn(true);
+
+        PropietarioRequestDto request = new PropietarioRequestDto(
+                "Fade", emailRepetido, "+569", "Direccion", "S", "1",
+                TipoPropietario.NATURAL, EstadoCuenta.ACTIVO, EstadoBusqueda.BUSCANDO
+        );
+
+        // 2. Act & 3. Assert
+        assertThrows(RuntimeException.class, () -> {
+            propietarioService.register(request);
+        });
     }
 }
