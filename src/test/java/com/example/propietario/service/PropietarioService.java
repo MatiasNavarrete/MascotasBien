@@ -19,8 +19,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PropietarioServiceTest {
@@ -166,5 +165,40 @@ class PropietarioServiceTest {
         assertNotNull(lista);
         assertEquals(1, lista.size());
         assertEquals("Fade", lista.get(0).name());
+    }
+    @Test
+    void cuandoEliminarPropietarioExistente_entoncesNoLanzaExcepcion() {
+        // 1. Arrange
+        UUID id = UUID.randomUUID();
+        Propietario propietarioExistente = new Propietario();
+        propietarioExistente.setId(id);
+
+        // MOCK CLAVE: Simulamos que el repositorio SI encuentra al propietario
+        when(propietarioRepository.findById(id)).thenReturn(java.util.Optional.of(propietarioExistente));
+
+        // 2. Act & 3. Assert
+        // Ahora findById no lanzará el RuntimeException y llegará al delete
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> {
+            propietarioService.delete(id);
+        });
+
+        // Verificación extra: Aseguramos que se llamó al método delete del repo con el objeto correcto
+        verify(propietarioRepository, times(1)).delete(propietarioExistente);
+    }
+    @Test
+    void cuandoEliminarPropietarioInexistente_entoncesLanzaExcepcion() {
+        // 1. Arrange
+        UUID idInexistente = UUID.randomUUID();
+
+        // Simulamos que el repo devuelve un Optional vacío
+        when(propietarioRepository.findById(idInexistente)).thenReturn(java.util.Optional.empty());
+
+        // 2. Act & 3. Assert
+        var exception = assertThrows(RuntimeException.class, () -> {
+            propietarioService.delete(idInexistente);
+        });
+
+        // Verificamos que el mensaje sea el que tú escribiste
+        assertTrue(exception.getMessage().contains("No se encontro el propietario con esta id"));
     }
 }
