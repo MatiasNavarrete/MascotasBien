@@ -135,9 +135,36 @@ class PropietarioServiceTest {
 
         // 3. Assert
         assertNotNull(resultado);
-
-        // IMPORTANTE: Si el record dice 'String nombre', usa .nombre()
-        // Si el record dice 'String name', usa .name()
         assertEquals("Pepe", resultado.name());
+    }
+    @Test
+    void cuandoListarTodos_entoncesRetornaListaDePropietarios() {
+        // 1. Arrange
+        Propietario p1 = new Propietario();
+        p1.setName("Fade");
+
+        PropietarioResponseDto responseDto = new PropietarioResponseDto(
+                UUID.randomUUID(),
+                "Fade",
+                "fade@u.cl",
+                "+569",
+                "venezuela",
+                TipoPropietario.JURIDICO,
+                EstadoCuenta.ACTIVO,
+                EstadoBusqueda.SIN_MASCOTAS_PERDIDAS
+        );
+
+        // Simulamos que el repo devuelve una lista con un elemento
+        when(propietarioRepository.findAll()).thenReturn(java.util.List.of(p1));
+        // Simulamos que el mapper convierte ese elemento
+        when(propietarioMapper.toResponseDto(p1)).thenReturn(responseDto);
+
+        // 2. Act
+        var lista = propietarioService.findAll(); // Ajusta si tu método se llama getAll()
+
+        // 3. Assert
+        assertNotNull(lista);
+        assertEquals(1, lista.size());
+        assertEquals("Fade", lista.get(0).name());
     }
 }
