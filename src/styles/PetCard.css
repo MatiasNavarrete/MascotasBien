@@ -1,0 +1,23 @@
+.pet-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.status-lost { background-color: var(--secondary-color); }
+.status-found { background-color: var(--primary-color); }
