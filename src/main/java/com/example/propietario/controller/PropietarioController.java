@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,11 +26,22 @@ public class PropietarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.register(dto));
     }
 
+    @GetMapping
+    public ResponseEntity<List<PropietarioResponseDto>> findAll(){
+        return ResponseEntity.ok(service.findAll());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PropietarioResponseDto> findById(@PathVariable UUID id){
 
         return ResponseEntity.ok(service.findById(id));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removeOwner(@PathVariable UUID id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -26,7 +26,7 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active", nullable = false)
     private boolean is_active = true;
 
 }

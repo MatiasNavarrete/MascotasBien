@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,5 +42,24 @@ public class PropietarioServiceImpl implements PropietarioService {
         return repository.findById(id)
                 .map(mapper::toResponseDto)
                 .orElseThrow(() -> new RuntimeException("No se encontró el propietario con ID: " + id));
+    }
+
+    @Override
+    @Transactional
+    public void delete(UUID id){
+
+        Propietario propietario =repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("No se encontro el propietario con esta id: " + id));
+
+        repository.delete(propietario);
+
+    }
+
+    @Override
+    public List<PropietarioResponseDto> findAll(){
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponseDto)
+                .toList();
     }
 }

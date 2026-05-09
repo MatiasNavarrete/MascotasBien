@@ -8,11 +8,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "propietarios", indexes = {
         @Index(name = "idx_propietario_email", columnList = "email")
 })
+@SQLDelete(sql = "UPDATE propietarios SET is_active = false WHERE id = ?")
+@SQLRestriction("is_active = true")
 @Getter @Setter
 @NoArgsConstructor
 public class Propietario extends BaseEntity {
