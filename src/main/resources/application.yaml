@@ -1,6 +1,41 @@
 server:
   port: 8080
-
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+    show-login-endpoint: true
+    # Esto evita que Swagger intente documentar cosas que no debe y lance el 500
+    writer-with-default-pretty-printer: true
+  spring:
+    security:
+      user:
+        name: fade
+        password: 123
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics" # La guía exige estos tres
+  endpoint:
+    health:
+      show-details: "always" # Obligatorio para ver estado de BD y Redis
+  tracing:
+    sampling:
+      probability: 1.0 # Para asegurar que cada petición lleve Trace ID
+resilience4j:
+  circuitbreaker:
+    instances:
+      propietarioService:
+                    registerHealthIndicator: true
+                    slidingWindowSize: 10
+                    permittedNumberOfCallsInHalfOpenState: 3
+                    slidingWindowType: COUNT_BASED
+                    minimumNumberOfCalls: 5
+                    waitDurationInOpenState: 5s
+                    failureRateThreshold: 50 # El 50% que exige la guía
+                    eventConsumerBufferSize: 10
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{userIp}] %-5level %logger{36} - %msg%n"
