@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,5 +105,39 @@ class PropietarioServiceTest {
         assertThrows(RuntimeException.class, () -> {
             propietarioService.register(request);
         });
+    }
+
+    @Test
+    void cuandoBuscarPorIdExistente_entoncesRetornaPropietario() {
+        // 1. Arrange
+        UUID id = UUID.randomUUID();
+        Propietario propietarioEnDb = new Propietario();
+        propietarioEnDb.setId(id);
+        propietarioEnDb.setName("Pepe"); // Asegúrate si es .setName o .setNombre en tu Entidad
+
+        // Aquí está el truco: mira bien los nombres de los campos de tu record
+        PropietarioResponseDto responseDto = new PropietarioResponseDto(
+                id,
+                "Pepe",
+                "pepe@u.cl",
+                "+569",
+                "a",
+                TipoPropietario.FUNDACION,
+                EstadoCuenta.ACTIVO,
+                EstadoBusqueda.BUSCANDO
+        );
+
+        when(propietarioRepository.findById(id)).thenReturn(Optional.of(propietarioEnDb));
+        when(propietarioMapper.toResponseDto(propietarioEnDb)).thenReturn(responseDto);
+
+        // 2. Act
+        PropietarioResponseDto resultado = propietarioService.findById(id);
+
+        // 3. Assert
+        assertNotNull(resultado);
+
+        // IMPORTANTE: Si el record dice 'String nombre', usa .nombre()
+        // Si el record dice 'String name', usa .name()
+        assertEquals("Pepe", resultado.name());
     }
 }
