@@ -13,6 +13,10 @@ server:
       user:
         name: fade
         password: 123
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 management:
   endpoints:
     web:

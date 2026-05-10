@@ -15,6 +15,7 @@ public record PropietarioResponseDto(
         String address,
         TipoPropietario tipoPropietario,
         EstadoCuenta estadoCuenta,
-        EstadoBusqueda estadoBusqueda
+        EstadoBusqueda estadoBusqueda,
+        String image
 ) {
 }

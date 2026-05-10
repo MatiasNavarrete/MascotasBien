@@ -44,4 +44,8 @@ public class Propietario extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private EstadoBusqueda estadoBusqueda;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String image;
 }

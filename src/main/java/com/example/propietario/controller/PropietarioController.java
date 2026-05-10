@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +33,13 @@ public class PropietarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.register(dto));
     }
 
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PropietarioResponseDto> registrar(
+            @ModelAttribute PropietarioRequestDto dto,
+            @RequestParam("image") MultipartFile image
+    ) {
+        return ResponseEntity.ok(service.save(dto, image));
+    }
     @Operation(summary = "Obtener todos los propietarios", description = "Retorna una lista de propietarios activos filtrados por el borrado lógico")
     @GetMapping
     public ResponseEntity<List<PropietarioResponseDto>> findAll(){
