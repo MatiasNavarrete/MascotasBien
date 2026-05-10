@@ -1,48 +1,83 @@
-import React, { useState } from 'react';
-import PetCard from '../components/PetCard';
+import React, { useEffect, useState } from 'react';
+import { obtenerTodosLosReportes, eliminarReporte } from '../service/PropietarioService';
 import '../styles/Home.css';
 
 const Home = () => {
-  // Estos datos simulan lo que vendrá de tu base de datos de Java/Kotlin
-  const [mascotas] = useState([
-    { 
-      id: 1, 
-      nombre: 'Gerardo', 
-      estado: 'Perdido', 
-      ubicacion: 'La Calera', 
-      descripcion: 'Pollo algo mal alimentado, se perdió el lunes pasado.',
-      imagen: '/public/fotos/Poyo.jpeg'
-    },
-    { 
-      id: 2, 
-      nombre: 'Pastelito', 
-      estado: 'Encontrado', 
-      ubicacion: 'Viña del Mar', 
-      descripcion: 'Perro encontrado cerca de la playa, parece que se perdió hace poco.',
-      imagen: '/public/fotos/perro.jpg' 
-    },
-    { 
-      id: 3, 
-      nombre: 'Cabezon', 
-      estado: 'Perdido', 
-      ubicacion: 'Quillota', 
-      descripcion: 'Busco a mi jirafa que se perdio en el campo ',
-      imagen: '/public/fotos/jirafa.jpg'
+  const [reportes, setReportes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const cargarDatos = async () => {
+    try {
+      const data = await obtenerTodosLosReportes();
+      setReportes(data);
+    } catch (error) { console.error("Error cargando datos:", error); } 
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => { cargarDatos(); }, []);
+
+  const handleEliminar = async (id) => {
+    if (window.confirm("¿Confirmas que la mascota ya apareció?")) {
+      try {
+        await eliminarReporte(id);
+        setReportes(reportes.filter(r => r.id !== id));
+      } catch (error) { alert("No se pudo eliminar el reporte."); }
     }
-  ]);
+  };
 
   return (
     <div className="home-container">
-      <header className="home-header">
-        <h1>Mascotas Bien</h1>
-        <p>Conectando corazones para que ninguna mascota se quede fuera.</p>
-      </header>
+      <h1>🐾 Comunidad Mascotas Bien</h1>
 
-      <section className="pet-grid">
-        {mascotas.map((pet) => (
-          <PetCard key={pet.id} mascota={pet} />
-        ))}
-      </section>
+      {loading ? <p>Cargando reportes...</p> : (
+        <div className="reportes-grid">
+          {reportes.map((reporte) => (
+            <div key={reporte.id} className="mascota-card">
+              
+              <div className="card-image-container" style={{ backgroundColor: '#f0f0f0', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {/* BLINDAJE: Solo intentamos cargar si el String es suficientemente largo */}
+                {reporte.image && reporte.image.length > 100 ? (
+                  <img 
+                    src={reporte.image} 
+                    alt="Mascota"
+                    className="mascota-img"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                       // Si la imagen falla, ocultamos el tag roto y mostramos el emoji
+                       e.target.style.display = 'none';
+                       e.target.parentNode.innerHTML = '<span style="font-size: 60px;">🐶</span>';
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: '60px' }}>🐶</span>
+                )}
+              </div>
+
+              <div className="card-body">
+                <span className={`badge ${reporte.estadoBusqueda}`}>{reporte.estadoBusqueda}</span>
+                <h3>{reporte.nameMascota || "Mascota sin nombre"}</h3>
+                <p>📍 <strong>Visto en:</strong> {reporte.address || "No informada"}</p>
+                
+                <div className="contacto-info">
+                   <p><strong>Dueño:</strong> {reporte.name}</p>
+                   <div className="botones-contacto">
+                      <a href={`tel:${reporte.phoneNumber}`} className="btn-contacto call">
+                        📞 {reporte.phoneNumber || "Llamar"}
+                      </a>
+                      <a href={`mailto:${reporte.email}`} className="btn-contacto mail">
+                        ✉️ {reporte.email || "Email"}
+                      </a>
+                   </div>
+                </div>
+
+                <button className="btn-encontrado" onClick={() => handleEliminar(reporte.id)}>
+                  🎉 ¡Ya se encontró!
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
