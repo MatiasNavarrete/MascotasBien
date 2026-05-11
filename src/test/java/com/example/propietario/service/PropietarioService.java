@@ -58,7 +58,8 @@ class PropietarioServiceTest {
                 "aqui",
                 TipoPropietario.NATURAL,
                 EstadoCuenta.ACTIVO,
-                EstadoBusqueda.BUSCANDO
+                EstadoBusqueda.BUSCANDO,
+                "image"
         );
 
         // Simulamos los 3 pasos del ServiceImpl
@@ -123,7 +124,8 @@ class PropietarioServiceTest {
                 "a",
                 TipoPropietario.FUNDACION,
                 EstadoCuenta.ACTIVO,
-                EstadoBusqueda.BUSCANDO
+                EstadoBusqueda.BUSCANDO,
+                "image"
         );
 
         when(propietarioRepository.findById(id)).thenReturn(Optional.of(propietarioEnDb));
@@ -150,7 +152,8 @@ class PropietarioServiceTest {
                 "venezuela",
                 TipoPropietario.JURIDICO,
                 EstadoCuenta.ACTIVO,
-                EstadoBusqueda.SIN_MASCOTAS_PERDIDAS
+                EstadoBusqueda.SIN_MASCOTAS_PERDIDAS,
+                "image"
         );
 
         // Simulamos que el repo devuelve una lista con un elemento
