@@ -11,7 +11,7 @@ public interface MascotaMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
     MascotaEntity toEntity(MascotaRequestDTO dto);
 
     MascotaRequestDTO toDto(MascotaEntity entity);
