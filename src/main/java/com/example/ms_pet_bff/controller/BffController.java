@@ -6,33 +6,28 @@ import com.example.ms_pet_bff.dto.DashboardPetResponseDto;
 import com.example.ms_pet_bff.dto.MascotaResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; // Importa todas las anotaciones web
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/bff")
-@CrossOrigin(origins = "http://localhost:5173") // El puerto de tu frontend
+@CrossOrigin(origins = "http://localhost:5173")
 public class BffController {
 
     @Autowired
     private PropietarioClient propClient;
-    @Autowired private MascotaClient mascClient;
+
+    @Autowired
+    private MascotaClient mascClient;
 
     @GetMapping("/dashboard")
     public ResponseEntity<List<DashboardPetResponseDto>> getDashboardData() {
         var propietarios = propClient.getAll();
 
         var listaCombinada = propietarios.stream().map(p -> {
-            //Buscamos la mascota para este propietario
             List<MascotaResponseDto> mascotas = mascClient.getByPropietarioId(p.id());
-
-            //Tomamos la primera mascota si existe (asumiendo lógica de dashboard simple)
             MascotaResponseDto m = (mascotas != null && !mascotas.isEmpty()) ? mascotas.get(0) : null;
 
             return new DashboardPetResponseDto(
@@ -49,5 +44,26 @@ public class BffController {
         }).toList();
 
         return ResponseEntity.ok(listaCombinada);
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity<?> registrarPropietarioYMascota(@RequestBody Object formulario) {
+        try {
+            // Delega la responsabilidad al microservicio de propietarios vía Feign
+            Object respuesta = propClient.registrar(formulario);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error de comunicación con el microservicio: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/propietario/{id}")
+    public ResponseEntity<?> eliminarReporte(@PathVariable UUID id) {
+        try {
+            propClient.eliminar(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al intentar eliminar: " + e.getMessage());
+        }
     }
 }
