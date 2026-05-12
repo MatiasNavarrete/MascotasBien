@@ -12,7 +12,7 @@
 	<groupId>com.promptlabs</groupId>
 	<artifactId>mascota</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-gestion-mascotas</name>
+	<name>ms-mascotas</name>
 	<description>Microservicio de Gestión de Mascotas - Sanos y Salvos</description>
 
 	<properties>
