@@ -6,9 +6,10 @@ import com.example.ms_pet_bff.dto.DashboardPetResponseDto;
 import com.example.ms_pet_bff.dto.MascotaResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*; // Importa todas las anotaciones web
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -47,13 +48,13 @@ public class BffController {
     }
 
     @PostMapping("/registro")
-    public ResponseEntity<?> registrarPropietarioYMascota(@RequestBody Object formulario) {
+    public ResponseEntity<?> registrarPropietarioYMascota(@RequestBody Map<String, Object> formulario) {
         try {
-            // Delega la responsabilidad al microservicio de propietarios vía Feign
-            Object respuesta = propClient.registrar(formulario);
-            return ResponseEntity.ok(respuesta);
+            //El BFF simplemente reenvía el JSON al microservicio de Propietarios
+            return ResponseEntity.ok(propClient.registrar(formulario));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error de comunicación con el microservicio: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error en el BFF: " + e.getMessage());
         }
     }
 
