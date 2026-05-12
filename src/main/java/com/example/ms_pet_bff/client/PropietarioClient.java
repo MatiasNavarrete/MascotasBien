@@ -2,7 +2,7 @@ package com.example.ms_pet_bff.client;
 
 import com.example.ms_pet_bff.dto.PropietarioResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -10,4 +10,13 @@ import java.util.List;
 public interface PropietarioClient {
     @GetMapping
     List<PropietarioResponseDto> getAll();
+
+    //Nuevo método para enviar el registro al microservicio de propietarios
+    @PostMapping
+    Object registrar(@RequestBody Object formulario);
+
+    //Nuevo método para eliminar (si el frontend lo requiere a través del BFF)
+    @DeleteMapping("/{id}")
+    void eliminar(@PathVariable("id") java.util.UUID id);
+
 }
