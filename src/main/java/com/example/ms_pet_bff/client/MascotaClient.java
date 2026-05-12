@@ -11,5 +11,5 @@ import java.util.UUID;
 @FeignClient(name = "mascota", url = "http://localhost:8081/api/v1/mascotas")
 public interface MascotaClient {
     @GetMapping("/propietario/{ownerId}")
-    List<MascotaResponseDto> getByPropietarioId(@PathVariable("ownerId")UUID id);
+    List<MascotaResponseDto> getByPropietarioId(@PathVariable("ownerId")UUID ownerId);
 }
