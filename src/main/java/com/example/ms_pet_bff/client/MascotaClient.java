@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "mascota", url = "http://localhost:8081/api/v1/mascota")
+@FeignClient(name = "mascota", url = "http://localhost:8081/api/v1/mascotas")
 public interface MascotaClient {
     @GetMapping("/propietario/{ownerId}")
-    MascotaResponseDto getByPropietarioId(@PathVariable("id")UUID id);
+    MascotaResponseDto getByPropietarioId(@PathVariable("ownerId")UUID id);
 }
