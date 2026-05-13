@@ -1,28 +1,59 @@
 import '../styles/PetCard.css';
 import React from 'react';
 
-const PetCard = ({ mascota }) => {
-  // Verificamos si es "Perdido" para cambiar el color del badge después
-  const esPerdido = mascota.estado === 'Perdido';
+const PetCard = ({ mascota, onEliminar }) => { 
+
+  const esPerdido = mascota.estadoBusqueda === 'BUSCANDO';
+
+  let textoEstado = 'Desconocido';
+  if (mascota.estadoBusqueda === 'BUSCANDO') {
+    textoEstado = 'Buscando';
+  } else if (mascota.estadoBusqueda === 'ENCONTRADA') {
+    textoEstado = 'Encontrada';
+  }
 
   return (
     <div className="pet-card">
       <div className="image-container">
-        {/* Aquí mascota.imagen traerá la ruta que definiste (ej: /fotos/luna.jpg) */}
-        <img src={mascota.imagen} alt={mascota.nombre} />
+      <img 
+        src={
+          mascota.image 
+            ? (mascota.image.startsWith('data:') ? mascota.image : `data:image/png;base64,${mascota.image}`)
+            : 'https://via.placeholder.com/150'
+        } 
+        alt={mascota.nombreMascota || 'Mascota'}
+        className="pet-image" 
+      />
         
-        {/* El badge cambia de clase según el estado */}
         <span className={`status-badge ${esPerdido ? 'badge-alert' : 'badge-success'}`}>
-          {mascota.estado}
+          {textoEstado}
         </span>
       </div>
 
       <div className="pet-info">
-        <h3>{mascota.nombre}</h3>
-        <p className="location">📍 {mascota.ubicacion}</p>
-        <p className="description">{mascota.descripcion}</p>
+        <h3 className="pet-name">{mascota.nombreMascota || mascota.name || 'Mascota sin nombre'}</h3>
         
-        <button className="btn-detail">Ver más información</button>
+        <p className="location">
+          📍 <strong>Perdido en:</strong> {mascota.direccion || 'Ubicación no informada'}
+        </p>
+        
+        <p className="owner-info">
+          <strong>Dueño:</strong> {mascota.nombreDueno || 'No informado'}
+        </p>
+
+        <p className="breed-info">
+          <strong>Raza:</strong> {mascota.razaMascota || 'No informada'} • <strong>Tipo:</strong> {mascota.tipoPropietario || 'No informado'}
+        </p>
+        
+        <div className="button-group">
+            <button className="btn-detail">Ver más información</button>
+            <button 
+              className="btn-encontrado" 
+              onClick={() => onEliminar(mascota.propietarioId)}
+            >
+              🎉 ¡Ya se encontró!
+            </button> 
+        </div>
       </div>
     </div>
   );
