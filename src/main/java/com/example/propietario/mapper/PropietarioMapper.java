@@ -14,7 +14,7 @@ public interface PropietarioMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updateAt", ignore = true)
     @Mapping(target = "_active", ignore = true)
-    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "image", source = "image")
     Propietario toEntity(PropietarioRequestDto dto);
 
     // Convierte la Entidad al DTO de salida (lo que ve el cliente)
