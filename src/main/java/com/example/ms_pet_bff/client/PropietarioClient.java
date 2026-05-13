@@ -15,7 +15,7 @@ public interface PropietarioClient {
     List<PropietarioResponseDto> getAll();
 
     @PostMapping
-    Object registrar(@RequestBody Map<String, Object> formulario);
+    PropietarioResponseDto registrar(@RequestBody Map<String, Object> formulario);
 
     @DeleteMapping("/{id}")
     void eliminar(@PathVariable("id") UUID id);
