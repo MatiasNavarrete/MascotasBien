@@ -16,7 +16,7 @@ public record PropietarioRequestDto(
 
         @Schema(description = "Correo electrónico institucional o personal", example = "fade@u.cl")
         @NotBlank(message = "El email es obligatorio")
-        @Email(message = "Debes ingresar un metodo de email valido")
+        @Email(message = "Debes ingresar un email valido")
         String email,
 
         @Schema(description = "Teléfono de contacto con formato chileno", example = "+56912345678")
@@ -37,7 +37,8 @@ public record PropietarioRequestDto(
 
         EstadoCuenta estadoCuenta,
 
-        EstadoBusqueda estadoBusqueda
+        EstadoBusqueda estadoBusqueda,
 
+        String image
 ) {
 }
