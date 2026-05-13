@@ -46,6 +46,6 @@ public class Propietario extends BaseEntity {
     private EstadoBusqueda estadoBusqueda;
 
     @Lob
-    @Column(columnDefinition = "CLOB")
+    @Column(name = "image", columnDefinition = "LONGTEXT")
     private String image;
 }
