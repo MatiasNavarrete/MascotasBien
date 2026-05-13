@@ -31,12 +31,20 @@ public class PropietarioServiceImpl implements PropietarioService {
         if (repository.findByEmail(dto.email()).isPresent()) {
             throw new RuntimeException("El email " + dto.email() + " ya está registrado.");
         }
-        Propietario entidad = mapper.toEntity(dto);
-        Propietario guardado = repository.save(entidad);
-        if (entidad.getEstadoCuenta() == null) entidad.setEstadoCuenta(EstadoCuenta.ACTIVO);
-        if (entidad.getEstadoBusqueda() == null) entidad.setEstadoBusqueda(EstadoBusqueda.SIN_MASCOTAS_PERDIDAS);
-        return mapper.toResponseDto(guardado);
 
+        Propietario entidad = mapper.toEntity(dto);
+
+        // 2. Seteamos los valores por defecto ANTES de guardar
+        if (entidad.getEstadoCuenta() == null) {
+            entidad.setEstadoCuenta(EstadoCuenta.ACTIVO);
+        }
+        if (entidad.getEstadoBusqueda() == null) {
+            entidad.setEstadoBusqueda(com.example.propietario.enums.EstadoBusqueda.BUSCANDO);
+        }
+
+        Propietario guardado = repository.save(entidad);
+
+        return mapper.toResponseDto(guardado);
     }
 
     @Override
