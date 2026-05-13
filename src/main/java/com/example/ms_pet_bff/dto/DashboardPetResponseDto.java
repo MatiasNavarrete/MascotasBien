@@ -15,6 +15,7 @@ public record DashboardPetResponseDto(
         String razaMascota,
         EstadoBusqueda estadoBusqueda,
         TipoPropietario tipoPropietario,
-        EstadoCuenta estadoCuenta
+        EstadoCuenta estadoCuenta,
+        String image
 ) {
 }
